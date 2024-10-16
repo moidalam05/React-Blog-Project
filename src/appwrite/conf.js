@@ -29,6 +29,7 @@ export class Service {
 				}
 			);
 		} catch (error) {
+			console.error("Error creating post:", error.message);
 			throw error;
 		}
 	}
@@ -47,6 +48,7 @@ export class Service {
 				}
 			);
 		} catch (error) {
+			console.error("Error updating post:", error.message);
 			throw error;
 		}
 	}
@@ -60,8 +62,8 @@ export class Service {
 			);
 			return true;
 		} catch (error) {
+			console.error("Error deleting post:", error.message);
 			throw error;
-			return false;
 		}
 	}
 
@@ -73,8 +75,8 @@ export class Service {
 				slug
 			);
 		} catch (error) {
+			console.error("Error getting post:", error.message);
 			throw error;
-			return false;
 		}
 	}
 
@@ -86,6 +88,7 @@ export class Service {
 				queries
 			);
 		} catch (error) {
+			console.error("Error getting posts:", error.message);
 			throw error;
 		}
 	}
@@ -99,6 +102,7 @@ export class Service {
 				file
 			);
 		} catch (error) {
+			console.error("Error uploading file:", error.message);
 			throw error;
 		}
 	}
@@ -108,13 +112,18 @@ export class Service {
 			await this.bucket.deleteFile(config.appwriteBucketId, fileId);
 			return true;
 		} catch (error) {
+			console.error("Error deleting file:", error.message);
 			throw error;
-			return false;
 		}
 	}
 
 	getFilePreviewUrl(fileId) {
-		return this.bucket.getFilePreview(config.appwriteBucketId, fileId);
+		try {
+			return this.bucket.getFilePreview(config.appwriteBucketId, fileId);
+		} catch (error) {
+			console.error("Error getting file preview URL:", error.message);
+			throw error;
+		}
 	}
 }
 

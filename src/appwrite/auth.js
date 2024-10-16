@@ -14,44 +14,64 @@ export class AuthService {
 
 	async createAccount({ email, password, name }) {
 		try {
-			const userAccount = await this.client.account.create(
+			const userAccount = await this.account.create(
 				ID.unique(),
 				email,
 				password,
 				name
 			);
 			if (userAccount) {
-				return this.login({ email, password });
-			} else {
-				return userAccount;
+				return await this.login({ email, password });
 			}
+			return userAccount;
 		} catch (error) {
+			console.error("Error creating account:", error.message);
 			throw error;
 		}
 	}
 
 	async login({ email, password }) {
 		try {
-			return await this.account.createEmailSession(email, password);
+			const session = await this.account.createEmailSession(
+				email,
+				password
+			);
+			console.log("Login successful:", session);
+			return await this.getCurrentUser();
 		} catch (error) {
+			console.error("Error logging in:", error.message);
 			throw error;
 		}
 	}
 
-	async getCurrentUser() {
+	async isLoggedIn() {
 		try {
-			return await this.account.get();
+			await this.account.get();
+			return true;
 		} catch (error) {
-			console.log(error);
-			throw error;
+			return false;
 		}
-		return null;
+	}
+
+	async getCurrentUser() {
+		if (await this.isLoggedIn()) {
+			try {
+				return await this.account.get();
+			} catch (error) {
+				console.log("Error getting current user:", error.message);
+				throw error;
+			}
+		} else {
+			console.log("User is not logged in");
+			return null;
+		}
 	}
 
 	async logout() {
 		try {
 			return await this.account.deleteSessions();
 		} catch (error) {
+			console.error("Error logging out:", error.message);
 			throw error;
 		}
 	}
