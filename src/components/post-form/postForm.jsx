@@ -5,7 +5,7 @@ import appwriteService from "../../appwrite/conf";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-const postForm = ({ post }) => {
+const PostForm = ({ post }) => {
 	const { register, handleSubmit, watch, setValue, control, getValues } =
 		useForm({
 			defaultValues: {
@@ -143,4 +143,4 @@ const postForm = ({ post }) => {
 	);
 };
 
-export default postForm;
+export default PostForm;
